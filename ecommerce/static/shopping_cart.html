@@ -1,0 +1,9 @@
+<table>
+  <tr ng-repeat="product in products">
+    <td>{{product.name}}</td>
+    <td>{{product.price | currency}}</td>
+  </tr>
+  <tr>
+    <td>{{total | currency}}</td>
+  </tr>
+</table>

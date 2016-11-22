@@ -67,12 +67,12 @@ def login():
     else:
         return 'Login Failed', 401
 
-@app.route('/api/shopping_cart', methods=["POST", "GET"])
+@app.route('/api/add_shopping_cart', methods=["POST"])
 def add_to_cart():
-    get_token = request.args.get('auth_token')
+    data = request.get_json()
+    get_token = data.get('auth_token')
     # post_token = request.get_json().get('auth_token')
-    product = request.get_json()
-    print product
+    product = data.get('product')
     customer_id = db.query('''
     select
         customer.id
@@ -82,28 +82,50 @@ def add_to_cart():
         customer.id = auth_token.customer_id and
         auth_token.token = $1
     ''', get_token).namedresult()
-    print 'this is a product', product["product_id"]
-    print customer_id
+    print 'this is a product', product
+    print "customer id: ", customer_id
     db.insert (
         "product_in_shopping_cart",
-        product_id = product["product_id"],
+        product_id = product,
         customer_id = customer_id[0].id
     )
     product_query = db.query('''
     select
         product.id, product.name
     from
-        product, product_in_shopping_cart, customer_id
+        product, product_in_shopping_cart, customer
     where
         product.id = product_in_shopping_cart.product_id and
         product_in_shopping_cart.customer_id = customer.id and
         customer.id = $1
-    ''', customer_id)
+    ''', customer_id[0].id).dictresult()
     print product_query
-    # return jsonify(product_query)
+    return jsonify(product_query)
 
+@app.route('/api/show_shopping_cart', methods=["GET"])
+def show_cart():
+  token = request.args.get('auth_token')
+  customer_id = db.query('''
+  select
+      customer.id
+  from
+      customer, auth_token
+  where
+      customer.id = auth_token.customer_id and
+      auth_token.token = $1
+  ''', token).namedresult()
+  cart_query = db.query('''
+  select
+      product.id, product.name, product.price, product.description, product.image_path
+  from
+      product, product_in_shopping_cart, customer
+  where
+      product.id = product_in_shopping_cart.product_id and
+      product_in_shopping_cart.customer_id = customer.id and
+      customer.id = $1
+  ''', customer_id[0].id).dictresult()
+  return jsonify(cart_query)
 
-# @app.route('')
 
 
 

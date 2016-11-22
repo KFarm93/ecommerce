@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   </head>
   <body ng-app="ecommerce">
-    Hello {{user.first_name}}
+    <p id="greeting">Hello {{user.first_name}}!</p>
+    <button id="logOutButton" ng-click="logOut()">Log Out</button>
     <ui-view></ui-view>
-
   </body>
 </html>

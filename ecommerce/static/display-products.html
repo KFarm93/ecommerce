@@ -1,5 +1,8 @@
 <div class="container-fluid">
   <div class="row">
+    <button type="submit" ng-click="test()">Test</button>
+    <button type="login" ng-click="loginButton()">Login</button>
+    <button type="submit" ng-click="viewCart()">View Cart</button>
     <div class="col-md-8" ng-repeat="listing in productList">
 
       <img alt="coffee" width="185px" height="278px"  ng-src="{{listing.image_path}}" ng-click="goToDetails(listing)">
